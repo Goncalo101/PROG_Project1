@@ -22,7 +22,7 @@ void greetUser(ifstream &input, ofstream &output, string &fileName)
     cout << string(greeting.length(), '=') << endl << endl;
 
     cout << "Insert dictionary input name: ";
-    input.open("input.txt");
+    input.open("29765-8.txt");
 
 //     Commented for debug purposes
 //     cin >> fileName;
@@ -146,7 +146,7 @@ vector<string> extractWords(ifstream &input, ofstream &output, string fileName)
                 cout << endl << currentLetter << endl;
             }
 
-            i += numberOfElementsAdded - 1;
+            i += numberOfElementsAdded;
         }
     }
 
