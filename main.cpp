@@ -22,7 +22,7 @@ vector<string> namesToVector(ifstream &infile)
 ////////////////////////////////////////////////////////////////////////////
 //swaps two string strings in a vector with indexes X and Y
 //used to sort vector with the names
-void swap(vector<string> names, int x, int y)
+void swapElements(vector<string> &names, int x, int y)
 {
 	string temp = names[x];
 	names[x] = names[y];
@@ -30,12 +30,30 @@ void swap(vector<string> names, int x, int y)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-//sorts the vector with the names in alphabetic order
-//CHANGE TO QUICK SORT METHOD
-void sortVector(vector<string> &names, int initialIndex, int finalIndex)
+//sorts the vector with the names in alphabetic order - quick sort method used
+void sortVector(vector<string> &names, int left, int right)
 {
-	
-	sort(names.begin(), names.end());
+	int i = left; //left index
+	int j = right; //right index
+	string pivot = names[(left + right) / 2]; //middle element of vector chosen as pivot
+
+	while (i <= j)
+	{
+		while (names[i] < pivot)
+			i++;
+		while (names[j] > pivot)
+			j--;
+		if (i <= j)
+		{
+			swapElements(names, i, j);
+			i++;
+			j--;
+		}
+	}
+	if (left < j)
+		sortVector(names, left, j);
+	if (i < right)
+		sortVector(names, i, right);
 	return;
 }
 
@@ -51,7 +69,6 @@ void writeNames(vector<string> names, ofstream& outfile)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
 int main()
 {
 	vector<string> names;
@@ -78,7 +95,7 @@ int main()
 	}
 
 	names = namesToVector(infile);
-	sortVector(names, 0, names.size() -1);
+	sortVector(names, 0, names.size() - 1);
 	writeNames(names, outfile);
 
 	infile.close();
