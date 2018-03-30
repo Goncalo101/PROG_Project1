@@ -85,7 +85,7 @@ int main()
 		exit(1);
 	}
 	size_t pos = fileName.find('.');
-	string outFileName = fileName.substr(0, pos) + "\_sorted\.txt";
+	string outFileName = fileName.substr(0, pos) + "_sorted.txt";
 
 	outfile.open(outFileName);
 	if (outfile.fail())
