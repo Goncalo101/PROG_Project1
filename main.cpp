@@ -157,7 +157,7 @@ size_t searchVector(vector<string> wordList, string word, int left, int right) {
 		if (word < mid)
 			return searchVector(wordList, word, left, posMid - 1);
 		if (word > mid)
-			return searchVector(wordList, word, posMid + 1, left);
+			return searchVector(wordList, word, posMid + 1, right);
 	}
 	return -1; //if the word does not exist in the wordList vector, the function returns -1;
 }
