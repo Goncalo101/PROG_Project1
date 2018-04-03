@@ -148,7 +148,7 @@ vector<string> extractWords(ifstream &input, ofstream &output, string fileName)
 //searches in 'wordList' for 'word' and returns its index if 'word' is found
 //if there's more than one 'word' in 'wordList' the function returns the index of the last ocurrency
 //Uses a Binary Search method
-size_t searchVector(vector<string> wordList, string word, int left, int right) {
+int searchVector(vector<string> wordList, string word, size_t left, size_t right) {
 	if (left <= right) {
 		int posMid = left + (right - left) / 2;
 		string mid = wordList[posMid];
@@ -166,16 +166,20 @@ size_t searchVector(vector<string> wordList, string word, int left, int right) {
 //Uses 'searchVector' funtion to search for words equal to the element of 'wordList' in the position 'index'
 //If 'searchVector' returns -1, it means that 'wordList' only has one word equal to the element in the position 'index'
 //so 'index' is incremented so that 'searchVector' evaluates the next element of 'wordList'
-void removeDuplicates(vector<string> &wordList) {
-	int index = 0;
-	while (index < wordList.size()) {
-		string word = wordList[index];
-		int posWord = searchVector(wordList, word, index + 1, wordList.size() -1);
-		if (posWord != -1) //true if searchVector found a duplicate of 'word' in 'wordList'
-			wordList.erase(wordList.begin() + posWord);
-		else index++;
-	}
-	return;
+void removeDuplicates(vector<string> &wordList)
+{
+//    size_t index = 0;
+//	while (index < wordList.size()) {
+//        string word = wordList[index];
+//        int posWord = searchVector(wordList, word, index + 1, wordList.size() - 1);
+//        if (posWord != -1) //true if searchVector found a duplicate of 'word' in 'wordList'
+//            wordList.erase(wordList.begin() + posWord);
+//        else index++;
+//
+//        if (index % 1000 == 0) cout << index << endl;
+// }
+
+    wordList.erase(unique(wordList.begin(), wordList.end()), wordList.end());
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -223,8 +227,6 @@ void sortVector(vector<string> &wordList, int left, int right)
 		sortVector(wordList, left, j);
 	if (i < right)
 		sortVector(wordList, i, right);
-
-	return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -250,21 +252,20 @@ int main()
 	wordList = extractWords(infile, outfile, inputFileName);
 	auto length = static_cast<int>(wordList.size());
 
-	// Ending sequence
-	cout << endl << "Number of simple words = " << length << endl;
+        // Ending sequence
+        cout << endl << "Number of simple words = " << length << endl;
 
-	cout << "Sorting words..." << endl;
-	sortVector(wordList, 0, length - 1);
+        cout << "Sorting words..." << endl;
+        sortVector(wordList, 0, length - 1);
 
-	cout << "Removing duplicates..." << endl;
-	removeDuplicates(wordList);
+        cout << "Removing duplicates..." << endl;
+        removeDuplicates(wordList);
 
-	cout << "Number of words without duplicates = " << wordList.size() << endl;
+        cout << "Number of words without duplicates = " << wordList.size() << endl;
 
-	cout << "Saving words to " << outputFileName << " ..." << endl;
-	writeEntries(wordList, outfile);
+        cout << "Saving words to " << outputFileName << " ..." << endl;
+        writeEntries(wordList, outfile);
 
-	cout << "Done" << endl;
-
+        cout << "Done" << endl;
 	return 0;
 }
