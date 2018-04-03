@@ -131,10 +131,11 @@ vector<string> extractWords(ifstream &input, ofstream &output, string fileName)
 			// This causes the program to consider CONSOLATION and RACE two different words and will thus, print
 			// R and then carry on with all the Cs. Is it really necessary to make an exception for this phrase?
 			if (currentLetter != temp && (isalpha(temp) || line.substr(0, line.find_first_of('\r')).length() == 1)) {
-				currentLetter = temp;
-				i = 1;
+				if (!(temp == 'R' && i < 40000)) {
+                    currentLetter = temp;
 
-				cout << endl << currentLetter << endl;
+                    cout << endl << currentLetter << endl;
+                }
 			}
 
 			i += numberOfElementsAdded;
