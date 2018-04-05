@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void greetUser(ifstream &input, string &inputFileName, vector<string> wordList)
+void greetUser(ifstream &input, string &inputFileName, vector<string>& wordList)
 {
 	string greeting = "PLAYING WITH WORDS";
 	string word;
@@ -14,7 +14,7 @@ void greetUser(ifstream &input, string &inputFileName, vector<string> wordList)
 	cout << string(greeting.length(), '=') << endl << endl;
 
 	//Unsure if this is the right aproach
-	cout << "Insert the name of the file containing the word list ";
+	cout << "Insert the name of the file containing the word list: ";
 
 	cin >> inputFileName;
 
@@ -25,12 +25,11 @@ void greetUser(ifstream &input, string &inputFileName, vector<string> wordList)
 		exit(1);
 	}
 
+	cout << "Extrating words from " << inputFileName << endl;
 	while (getline(input, word)) {
-		for (size_t i = 0; i < wordList.size(); i++)
-			wordList[i] = word;
+		wordList.push_back(word);
 	}
 		
-
 	return;
 }
 
@@ -53,26 +52,31 @@ int searchVector(vector<string> wordList, string word, int left, int right) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-bool exists(vector<string> wordList, string word) {
+bool exists(vector<string>& wordList, string word) {
+	bool result = false;
 	int pos = searchVector(wordList, word, 0, wordList.size() - 1);
-	if (pos != -1)
-		return true;
-	else return false;
+	if (pos != -1) {
+		result = true;
+	}
+	return result;
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void firstGame(vector<string> wordList) {
+void firstGame(vector<string> &wordList) {
 	
 	string word;
 
-	cout << "Insert a word:" << endl;
+	cout << "Insert a word: ";
 	cin >> word;
 
+	cout << "Searching for " << word << endl;
 	bool valueExists = exists(wordList, word);
 
-	if (valueExists)
+	if (valueExists) {
 		cout << "The word " << word << " belongs to the Word List" << endl;
-	else
+	}
+	else {
 		cout << "The word " << word << " does not belong to the Word List" << endl;
+	}
 	
 	return;
 }
