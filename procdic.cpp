@@ -72,7 +72,7 @@ vector<string> split(string line)
 			continue;
 
 		}
-		else if (isalpha(line[i])) {
+		else if (isalpha((unsigned char) line[i])) {
 			word.push_back(line[i]);
 
 		}
@@ -90,7 +90,7 @@ size_t parseLine(string line, vector<string> &wordList)
 {
 	// Ignore all lines containing lower case characters, asterisks, dashes and/or apostrophes.
 	for (char c : line) {
-		if (islower(c) || c == '*' || c == '.' || line == "\r")
+		if (islower((unsigned char) c) || c == '*' || c == '.' || line == "\r")
 			return 0;
 	}
 
@@ -132,10 +132,10 @@ vector<string> extractWords(ifstream &input, ofstream &output, string fileName)
 			// R and then carry on with all the Cs. Is it really necessary to make an exception for this phrase?
 			if (currentLetter != temp && (isalpha(temp) || line.substr(0, line.find_first_of('\r')).length() == 1)) {
 				if (!(temp == 'R' && i < 40000)) {
-                    currentLetter = temp;
+					currentLetter = temp;
 
-                    cout << endl << currentLetter << endl;
-                }
+					cout << endl << currentLetter << endl;
+				}
 			}
 
 			i += numberOfElementsAdded;
@@ -145,54 +145,20 @@ vector<string> extractWords(ifstream &input, ofstream &output, string fileName)
 	input.close();
 	return wordVector;
 }
-/////////////////////////////////////////////////////////////////////////////
-//searches in 'wordList' for 'word' and returns its index if 'word' is found
-//if there's more than one 'word' in 'wordList' the function returns the index of the last ocurrency
-//Uses a Binary Search method
-int searchVector(vector<string> wordList, string word, size_t left, size_t right) {
-	if (left <= right) {
-		int posMid = left + (right - left) / 2;
-		string mid = wordList[posMid];
-		if (word == mid)
-			return posMid;
-		if (word < mid)
-			return searchVector(wordList, word, left, posMid - 1);
-		if (word > mid)
-			return searchVector(wordList, word, posMid + 1, right);
-	}
-	return -1; //if the word does not exist in the wordList vector, the function returns -1;
-}
 
 /////////////////////////////////////////////////////////////////////////////
-//Uses 'searchVector' funtion to search for words equal to the element of 'wordList' in the position 'index'
-//If 'searchVector' returns -1, it means that 'wordList' only has one word equal to the element in the position 'index'
-//so 'index' is incremented so that 'searchVector' evaluates the next element of 'wordList'
+//Updated 'wordList' so that each 'word' appears only once
 void removeDuplicates(vector<string> &wordList)
 {
-//    size_t index = 0;
-//	while (index < wordList.size()) {
-//        string word = wordList[index];
-//        int posWord = searchVector(wordList, word, index + 1, wordList.size() - 1);
-//        if (posWord != -1) //true if searchVector found a duplicate of 'word' in 'wordList'
-//            wordList.erase(wordList.begin() + posWord);
-//        else index++;
-//
-//        if (index % 1000 == 0) cout << index << endl;
-// }
-
-    wordList.erase(unique(wordList.begin(), wordList.end()), wordList.end());
-}
-
-/////////////////////////////////////////////////////////////////////////////
-//returns a vector with each element being a line from the input file
-vector<string> wordsToVector(ifstream &infile)
-{
-	string word;
-	vector<string> wordList;
-	while (getline(infile, word)) {
-		wordList.push_back(word);
+	/* This code also takes a lot of time to complete
+	size_t i = 1;
+	while (i < wordList.size()) {
+	if (wordList[i] == wordList[i-1])
+	wordList.erase(wordList.begin() + i);
+	else i++;
 	}
-	return wordList;
+	*/
+	wordList.erase(unique(wordList.begin(), wordList.end()), wordList.end());
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -253,20 +219,20 @@ int main()
 	wordList = extractWords(infile, outfile, inputFileName);
 	auto length = static_cast<int>(wordList.size());
 
-        // Ending sequence
-        cout << endl << "Number of simple words = " << length << endl;
+	// Ending sequence
+	cout << endl << "Number of simple words = " << length << endl;
 
-        cout << "Sorting words..." << endl;
-        sortVector(wordList, 0, length - 1);
+	cout << "Sorting words..." << endl;
+	sortVector(wordList, 0, length - 1);
 
-        cout << "Removing duplicates..." << endl;
-        removeDuplicates(wordList);
+	cout << "Removing duplicates..." << endl;
+	removeDuplicates(wordList);
 
-        cout << "Number of words without duplicates = " << wordList.size() << endl;
+	cout << "Number of words without duplicates = " << wordList.size() << endl;
 
-        cout << "Saving words to " << outputFileName << " ..." << endl;
-        writeEntries(wordList, outfile);
+	cout << "Saving words to " << outputFileName << " ..." << endl;
+	writeEntries(wordList, outfile);
 
-        cout << "Done" << endl;
+	cout << "Done" << endl;
 	return 0;
 }
