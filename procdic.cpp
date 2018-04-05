@@ -46,7 +46,7 @@ size_t findNextSemiColon(size_t i, string line)
 
 // Each element of the line will be made an element of a vector (ignores elements that have hyphens or whitespaces).
 // Example:
-// Considering string line = "ABA; ABB; ABC; AB-D; AB E", split(line) should return a vector<string>
+// Considering string line = "ABA; ABB; ABC; AB-D; AB E", split(line) returns a vector<string>
 // like this: {"ABA", "ABB", "ABC"}
 vector<string> split(string line)
 {
@@ -54,31 +54,28 @@ vector<string> split(string line)
 	string word;
 
 	for (size_t i = 0; i < line.length(); i++) {
-		if (line[i] == ' ' || line[i] == '-') {
-			word.clear();
+        if ((line[i] == ' ' && line[i + 1] != ';') || line[i] == '-' || line[i] == '\'' || line[i] == '*' || line[i] == '.') {
+            word.clear();
 
-			i = findNextSemiColon(i, line);
+            i = findNextSemiColon(i, line);
 
-		}
-		else if (line[i] == ';') {
-			if (!word.empty()) {
-				wordList.push_back(word);
-			}
+        } else if ((line[i] == ';') || (line[i] == ' ' && line[i + 1] == ';')) {
+            if (!word.empty()) {
+                wordList.push_back(word);
+            }
 
-			word.clear();
+            word.clear();
+            i++;
 
-			i++;
+            continue;
 
-			continue;
+		} else if (isalpha((unsigned char) line[i])) {
+            word.push_back(line[i]);
 
-		}
-		else if (isalpha((unsigned char) line[i])) {
-			word.push_back(line[i]);
-
-		}
+        }
 	}
 
-	if (!word.empty()) {
+	if (!word.empty() && (word != "CHO" && word != "PJC")) {
 		wordList.push_back(word);
 	}
 
@@ -88,9 +85,9 @@ vector<string> split(string line)
 // Parses line in search of actual entries. Returns the number of words added to wordList.
 size_t parseLine(string line, vector<string> &wordList)
 {
-	// Ignore all lines containing lower case characters, asterisks, dashes and/or apostrophes.
+	// Ignore all lines containing lower case characters
 	for (char c : line) {
-		if (islower((unsigned char) c) || c == '*' || c == '.' || line == "\r")
+		if (islower((unsigned char) c))
 			return 0;
 	}
 
