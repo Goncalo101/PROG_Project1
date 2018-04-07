@@ -77,7 +77,7 @@ bool exists(vector<string> &wordList, string word)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-void firstGame(vector<string> &wordList)
+void checkWordInVector(vector<string> &wordList)
 {
 
     string word;
@@ -149,7 +149,7 @@ bool wildcardMatch(const char *str, const char *strWild)
     return !*str && !*strWild;
 }
 
-void fifthGame(vector<string> vector)
+void searchWithWildcard(vector<string> vector)
 {
     string sequence;
 
@@ -189,7 +189,7 @@ string scramble(vector<char> vector)
     return newWord;
 }
 
-void secondGame(vector<string> wordList)
+void guessWord(vector<string> wordList)
 {
     bool won = false;
     int tries = 3;
@@ -244,17 +244,17 @@ void showMenu(vector<string> wordList)
 
         switch (option) {
             case 1:
-                firstGame(wordList);
+                checkWordInVector(wordList);
                 cout << endl;
                 break;
 
             case 2:
-                secondGame(wordList);
+                guessWord(wordList);
                 cout << endl;
                 break;
 
             case 5:
-                fifthGame(wordList);
+                searchWithWildcard(wordList);
                 cout << endl;
                 break;
 
