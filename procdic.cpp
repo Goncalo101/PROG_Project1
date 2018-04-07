@@ -147,15 +147,15 @@ vector<string> extractWords(ifstream &input, ofstream &output, string fileName)
 //Updated 'wordList' so that each 'word' appears only once
 void removeDuplicates(vector<string> &wordList)
 {
-	/* This code also takes a lot of time to complete
+	/* This code also takes a lot of time to complete*/
 	size_t i = 1;
 	while (i < wordList.size()) {
 	if (wordList[i] == wordList[i-1])
 	wordList.erase(wordList.begin() + i);
 	else i++;
 	}
-	*/
-	wordList.erase(unique(wordList.begin(), wordList.end()), wordList.end());
+
+	//wordList.erase(unique(wordList.begin(), wordList.end()), wordList.end());
 }
 
 ////////////////////////////////////////////////////////////////////////////
