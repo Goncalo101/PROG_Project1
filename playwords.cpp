@@ -57,9 +57,16 @@ void capitalize(string &word)
 {
 	//STL way: transform(word.begin(), word.end(), word.begin(), [] (unsigned char c) { return toupper(c); } );
 
+<<<<<<< HEAD
 	for (char &c : word) {
 		c = static_cast<unsigned char>(toupper(c));
 	}
+=======
+    for (char &c : word) {
+        c = static_cast<unsigned char>(toupper(c));
+    }
+
+>>>>>>> b17521f94a1cd27126a3f079956e860d3b4e2207
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -166,6 +173,18 @@ void searchWithWildcard(vector<string> vector)
 	}
 }
 
+bool searchWithWildcard(vector<string> vector, string word)
+{
+    for (string s : vector) {
+        if (wildcardMatch(s.c_str(), word.c_str())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 // Creates a vector of chars of a given word, each element is a char
 vector<char> split(string word)
 {
@@ -183,8 +202,13 @@ string scramble(vector<char> vector)
 {
 	string newWord;
 
+<<<<<<< HEAD
 	while (vector.size()) {
 		unsigned long index = rand() % vector.size();
+=======
+    while (vector.size()) {
+        unsigned long index = rand() % vector.size();
+>>>>>>> b17521f94a1cd27126a3f079956e860d3b4e2207
 
 		newWord.push_back(vector[index]);
 		vector.erase(vector.begin() + index);
@@ -338,8 +362,35 @@ void buildWords(vector<string> wordList)
 	}
 }
 
+void createSet(vector<string> wordList)
+{
+    vector<char> letterVector;
+    string word;
+    string max_element = *(minmax_element(wordList.begin(), wordList.end()).second);
+
+    for (int i = 0; i < max_element.length(); ++i) {
+        letterVector.push_back(char(rand() % 25 + 65));
+    }
+
+    for (char c : letterVector) {
+        cout << c;
+    }
+
+    cout << endl << "Build a valid word: ";
+    cin >> word;
+
+    if (searchWithWildcard(wordList, word)) {
+        cout << "Word found" << endl;
+
+    } else {
+        cout << "Word not found" << endl;
+    }
+
+}
+
 void showMenu(vector<string> wordList)
 {
+<<<<<<< HEAD
 	int option = 0;
 
 	// Should we allow the player to keep playing after an option is selected? If yes, this works.
@@ -382,6 +433,50 @@ void showMenu(vector<string> wordList)
 		}
 
 	}
+=======
+    int option = 0;
+
+    // Should we allow the player to keep playing after an option is selected? If yes, this works.
+    while (true) {
+        // The option names will be improved in future versions of this program
+        cout << "1: Check if a word belongs to the word list" << endl;
+        cout << "2: Guess a word" << endl;
+        cout << "3: Build words" << endl;
+        cout << "4: Build Words 2" << endl;
+        cout << "5: Show words with wildcard" << endl;
+        cout << "6: Exit" << endl;
+        cout << "Select an option: " << flush;
+        cin >> option;
+
+        switch (option) {
+            case 1:
+                checkWordInVector(wordList);
+                cout << endl;
+                break;
+
+            case 2:
+                guessWord(wordList);
+                cout << endl;
+                break;
+
+            case 4:
+                createSet(wordList);
+                break;
+
+            case 5:
+                searchWithWildcard(wordList);
+                cout << endl;
+                break;
+
+            case 6:
+                exit(0);
+
+            default:
+                cout << "Please insert a valid option" << endl;
+                cin.clear();
+        }
+    }
+>>>>>>> b17521f94a1cd27126a3f079956e860d3b4e2207
 }
 
 int main()
