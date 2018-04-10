@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -50,6 +51,22 @@ int searchVector(vector<string> wordList, string word, int left, int right)
             return searchVector(wordList, word, posMid + 1, right);
     }
     return -1; //if the word does not exist in the wordList vector, the function returns -1
+}
+
+// Functionality similar to that of above but searches numbers
+int searchVector(vector<int> numberList, int number, int left, int right)
+{
+    if (left <= right) {
+        int posMid = left + (right - left) / 2;
+        int mid = numberList[posMid];
+        if (number == mid)
+            return posMid;
+        if (number < mid)
+            return searchVector(numberList, number, left, posMid - 1);
+        if (number > mid)
+            return searchVector(numberList, number, posMid + 1, right);
+    }
+    return -1; //if the number does not exist in the wordList vector, the function returns -1
 }
 
 void capitalize(string &word)
@@ -192,11 +209,25 @@ string scramble(vector<char> vector)
 {
     string newWord;
 
-    while (vector.size()) {
+    while (!vector.empty()) {
         unsigned long index = rand() % vector.size();
 
         newWord.push_back(vector[index]);
         vector.erase(vector.begin() + index);
+    }
+
+    return newWord;
+}
+
+string scramble(string word)
+{
+    string newWord;
+
+    while (!word.empty()) {
+        unsigned long index = rand() % word.size();
+
+        newWord.push_back(word[index]);
+        word.erase(word.begin() + index);
     }
 
     return newWord;
@@ -239,17 +270,48 @@ void guessWord(vector<string> wordList)
     }
 }
 
-void createSet(vector<string> wordList)
+// Calculates the total number of ocurrences of all letters in the wordList
+vector<int> computeNumberOfOcurrences(vector<string> wordList)
 {
-    vector<char> letterVector;
-    string word;
-    string max_element = *(minmax_element(wordList.begin(), wordList.end()).second);
+    vector<int> ocurrences(26);
 
-    for (int i = 0; i < max_element.length(); ++i) {
-        letterVector.push_back(char(rand() % 25 + 65));
+    for (int i : ocurrences)
+        i = 0;
+
+    for (string s : wordList) {
+        for (char c : s) {
+            ocurrences[c % 26] = ocurrences[c % 26] + 1;
+        }
     }
 
-    for (char c : letterVector) {
+    return ocurrences;
+}
+
+void createSet(vector<string> wordList)
+{
+    string letters;
+    vector<int> ocurrences = computeNumberOfOcurrences(wordList);
+
+    string word;
+    string longestWord = *(minmax_element(wordList.begin(), wordList.end()).second);
+
+    int minNumberOfOcurrences = *(minmax_element(ocurrences.begin(), ocurrences.end()).first);
+
+    for (int i = 0; i < longestWord.length(); ++i) {
+        if (i == 0) {
+            int minNumberPos = searchVector(ocurrences, minNumberOfOcurrences, 0, ocurrences.size() - 1) + 66;
+            letters.push_back(char(minNumberPos));
+            letters.push_back(char(minNumberPos));
+        } else {
+            // letters.push_back(char(ocurrences[rand() % ocurrences.size()] % 25 + 65));
+            int offset = rand() % 26;
+            letters += string(3, char(offset + 66));
+            i += ocurrences[offset]/longestWord.length();
+        }
+    }
+    scramble(letters);
+
+    for (char c : letters) {
         cout << c;
     }
 
@@ -262,7 +324,6 @@ void createSet(vector<string> wordList)
     } else {
         cout << "Word not found" << endl;
     }
-
 }
 
 void showMenu(vector<string> wordList)
