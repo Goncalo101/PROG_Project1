@@ -57,8 +57,9 @@ void capitalize(string &word)
     //STL way: transform(word.begin(), word.end(), word.begin(), [] (unsigned char c) { return toupper(c); } );
 
     for (char &c : word) {
-        c = static_cast<u_char>(toupper(c));
+        c = static_cast<unsigned char>(toupper(c));
     }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -162,6 +163,18 @@ void searchWithWildcard(vector<string> vector)
     }
 }
 
+bool searchWithWildcard(vector<string> vector, string word)
+{
+    for (string s : vector) {
+        if (wildcardMatch(s.c_str(), word.c_str())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 // Creates a vector of chars of a given word, each element is a char
 vector<char> split(string word)
 {
@@ -180,7 +193,7 @@ string scramble(vector<char> vector)
     string newWord;
 
     while (vector.size()) {
-        u_long index = rand() % vector.size();
+        unsigned long index = rand() % vector.size();
 
         newWord.push_back(vector[index]);
         vector.erase(vector.begin() + index);
@@ -226,6 +239,32 @@ void guessWord(vector<string> wordList)
     }
 }
 
+void createSet(vector<string> wordList)
+{
+    vector<char> letterVector;
+    string word;
+    string max_element = *(minmax_element(wordList.begin(), wordList.end()).second);
+
+    for (int i = 0; i < max_element.length(); ++i) {
+        letterVector.push_back(char(rand() % 25 + 65));
+    }
+
+    for (char c : letterVector) {
+        cout << c;
+    }
+
+    cout << endl << "Build a valid word: ";
+    cin >> word;
+
+    if (searchWithWildcard(wordList, word)) {
+        cout << "Word found" << endl;
+
+    } else {
+        cout << "Word not found" << endl;
+    }
+
+}
+
 void showMenu(vector<string> wordList)
 {
     int option = 0;
@@ -253,6 +292,10 @@ void showMenu(vector<string> wordList)
                 cout << endl;
                 break;
 
+            case 4:
+                createSet(wordList);
+                break;
+
             case 5:
                 searchWithWildcard(wordList);
                 cout << endl;
@@ -265,7 +308,6 @@ void showMenu(vector<string> wordList)
                 cout << "Please insert a valid option" << endl;
                 cin.clear();
         }
-
     }
 }
 
