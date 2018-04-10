@@ -57,16 +57,16 @@ void capitalize(string &word)
 {
 	//STL way: transform(word.begin(), word.end(), word.begin(), [] (unsigned char c) { return toupper(c); } );
 
-<<<<<<< HEAD
+
 	for (char &c : word) {
 		c = static_cast<unsigned char>(toupper(c));
 	}
-=======
-    for (char &c : word) {
-        c = static_cast<unsigned char>(toupper(c));
-    }
 
->>>>>>> b17521f94a1cd27126a3f079956e860d3b4e2207
+	for (char &c : word) {
+		c = static_cast<unsigned char>(toupper(c));
+	}
+
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -78,12 +78,18 @@ bool exists(vector<string> &wordList, string word)
 	capitalize(word);
 
 	int pos = searchVector(wordList, word, 0, wordList.size() - 1);
+
 	if (pos != -1) {
 		result = true;
 	}
 	return result;
 }
 
+void showVector(vector<string> wordsVector) {
+	for (size_t i = 0; i < wordsVector.size(); i++) {
+		cout << wordsVector[i] << endl;
+	}
+}
 ///////////////////////////////////////////////////////////////////////////////////
 void checkWordInVector(vector<string> &wordList)
 {
@@ -175,13 +181,13 @@ void searchWithWildcard(vector<string> vector)
 
 bool searchWithWildcard(vector<string> vector, string word)
 {
-    for (string s : vector) {
-        if (wildcardMatch(s.c_str(), word.c_str())) {
-            return true;
-        }
-    }
+	for (string s : vector) {
+		if (wildcardMatch(s.c_str(), word.c_str())) {
+			return true;
+		}
+	}
 
-    return false;
+	return false;
 }
 
 
@@ -202,19 +208,19 @@ string scramble(vector<char> vector)
 {
 	string newWord;
 
-<<<<<<< HEAD
+
 	while (vector.size()) {
 		unsigned long index = rand() % vector.size();
-=======
-    while (vector.size()) {
-        unsigned long index = rand() % vector.size();
->>>>>>> b17521f94a1cd27126a3f079956e860d3b4e2207
 
-		newWord.push_back(vector[index]);
-		vector.erase(vector.begin() + index);
+		while (vector.size()) {
+			unsigned long index = rand() % vector.size();
+
+			newWord.push_back(vector[index]);
+			vector.erase(vector.begin() + index);
+		}
+
+		return newWord;
 	}
-
-	return newWord;
 }
 
 void guessWord(vector<string> wordList)
@@ -265,17 +271,22 @@ vector<char> readSet()
 	char letter;
 	bool anotherLetter = true;
 
-	cout << "Please insert a set of letters, separated by 'space' (Insert '0' to end set): " << endl;
+	cout << "Please insert a set of letters, separated by 'space' (Insert '0' and press ENTER to end set): " << endl;
 	while (anotherLetter) {
 		cin >> letter;
 		if (letter == '0') {
 			anotherLetter = false;
 		}
 		else {
-			letterVector.push_back(letter);
+			if (!isalpha(letter)) {
+				cout << "Invalid input. Please insert only alphabetic characters." << endl;
+				cout << "Resuming set: ";
+			}
+			else {
+				letterVector.push_back(letter);
+			}
 		}
 	}
-
 	return letterVector;
 }
 
@@ -302,7 +313,12 @@ void swapElements(string &letterVector, int x, int y)
 //Updated 'wordList' so that each 'word' appears only once
 void removeDuplicates(vector<string> &wordList)
 {
-	wordList.erase(unique(wordList.begin(), wordList.end()), wordList.end());
+	size_t i = 1;
+	while (i < wordList.size()) {
+		if (wordList[i] == wordList[i - 1])
+			wordList.erase(wordList.begin() + i);
+		else i++;
+	}
 }
 
 vector<string> possibleConstructions(vector<char> letterVector) {
@@ -318,18 +334,16 @@ vector<string> possibleConstructions(vector<char> letterVector) {
 			possibleConstructionsVector.push_back(word);
 		}
 	}
-
-	removeDuplicates(possibleConstructionsVector);
 	return possibleConstructionsVector;
 }
 
 vector<string> validWords(vector<string> wordList, vector<string> wordsVector) {
 	vector<string> validWordsVector;
 	string possibleWord;
-	
+
 	for (size_t i = 0; i < wordsVector.size(); i++) {
 		possibleWord = wordsVector[i];
-		if (exists(wordList, possibleWord)) {
+		if (searchWithWildcard(wordList, possibleWord)) {
 			validWordsVector.push_back(possibleWord);
 		}
 	}
@@ -344,18 +358,14 @@ void buildWords(vector<string> wordList)
 	cout << "Building word possibilities..." << endl;
 	vector<string> possibleConstructionsVector = possibleConstructions(letterVector);
 
-	for (size_t i = 0; i < possibleConstructionsVector.size(); i++) {
-		cout << possibleConstructionsVector[i] << endl;
-	}
-
 	cout << "Verifying valid words..." << endl;
 	vector<string> validWordsVector = validWords(wordList, possibleConstructionsVector);
 
+	removeDuplicates(validWordsVector);
+
 	if (validWordsVector.size()) {
 		cout << "Valid words you can form with the letters " << letters << ": " << endl;
-		for (size_t i = 0; i < validWordsVector.size(); i++) {
-			cout << validWordsVector[i] << endl;
-		}
+		showVector(validWordsVector);
 	}
 	else {
 		cout << "You can not form any valid word with the letters: " << letters << endl;
@@ -364,33 +374,33 @@ void buildWords(vector<string> wordList)
 
 void createSet(vector<string> wordList)
 {
-    vector<char> letterVector;
-    string word;
-    string max_element = *(minmax_element(wordList.begin(), wordList.end()).second);
+	vector<char> letterVector;
+	string word;
+	string max_element = *(minmax_element(wordList.begin(), wordList.end()).second);
 
-    for (int i = 0; i < max_element.length(); ++i) {
-        letterVector.push_back(char(rand() % 25 + 65));
-    }
+	for (int i = 0; i < max_element.length(); ++i) {
+		letterVector.push_back(char(rand() % 25 + 65));
+	}
 
-    for (char c : letterVector) {
-        cout << c;
-    }
+	for (char c : letterVector) {
+		cout << c;
+	}
 
-    cout << endl << "Build a valid word: ";
-    cin >> word;
+	cout << endl << "Build a valid word: ";
+	cin >> word;
 
-    if (searchWithWildcard(wordList, word)) {
-        cout << "Word found" << endl;
+	if (searchWithWildcard(wordList, word)) {
+		cout << "Word found" << endl;
 
-    } else {
-        cout << "Word not found" << endl;
-    }
+	}
+	else {
+		cout << "Word not found" << endl;
+	}
 
 }
 
 void showMenu(vector<string> wordList)
 {
-<<<<<<< HEAD
 	int option = 0;
 
 	// Should we allow the player to keep playing after an option is selected? If yes, this works.
@@ -431,52 +441,7 @@ void showMenu(vector<string> wordList)
 			cout << "Please insert a valid option" << endl;
 			cin.clear();
 		}
-
 	}
-=======
-    int option = 0;
-
-    // Should we allow the player to keep playing after an option is selected? If yes, this works.
-    while (true) {
-        // The option names will be improved in future versions of this program
-        cout << "1: Check if a word belongs to the word list" << endl;
-        cout << "2: Guess a word" << endl;
-        cout << "3: Build words" << endl;
-        cout << "4: Build Words 2" << endl;
-        cout << "5: Show words with wildcard" << endl;
-        cout << "6: Exit" << endl;
-        cout << "Select an option: " << flush;
-        cin >> option;
-
-        switch (option) {
-            case 1:
-                checkWordInVector(wordList);
-                cout << endl;
-                break;
-
-            case 2:
-                guessWord(wordList);
-                cout << endl;
-                break;
-
-            case 4:
-                createSet(wordList);
-                break;
-
-            case 5:
-                searchWithWildcard(wordList);
-                cout << endl;
-                break;
-
-            case 6:
-                exit(0);
-
-            default:
-                cout << "Please insert a valid option" << endl;
-                cin.clear();
-        }
-    }
->>>>>>> b17521f94a1cd27126a3f079956e860d3b4e2207
 }
 
 int main()
