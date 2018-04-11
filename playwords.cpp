@@ -204,19 +204,14 @@ string scramble(vector<char> vector)
 {
 	string newWord;
 
-
 	while (vector.size()) {
 		unsigned long index = rand() % vector.size();
 
-		while (vector.size()) {
-			unsigned long index = rand() % vector.size();
-
-			newWord.push_back(vector[index]);
-			vector.erase(vector.begin() + index);
-		}
-
-		return newWord;
+		newWord.push_back(vector[index]);
+		vector.erase(vector.begin() + index);
 	}
+
+	return newWord;
 }
 
 //Second Game
@@ -260,86 +255,60 @@ void guessWord(vector<string> wordList)
 //GAME: BUILD WORDS
 ////////////////////////////////////////////////////////////////////////////
 //Reads a set of letters inputed by the user
-vector<char> readSet()
+bool validInput(string letters)
 {
-	vector<char> letterVector;
-	char letter;
-	bool anotherLetter = true;
-
-	cout << "Please insert a set of letters, separated by 'space' (Insert '0' and press ENTER to end set): " << endl;
-	while (anotherLetter) {
-		cin >> letter;
-		if (letter == '0') {
-			anotherLetter = false;
-		}
-		else {
-			if (!isalpha(letter)) {
-				cout << "Invalid input. Please insert only alphabetic characters." << endl;
-				cout << "Resuming set: ";
-			}
-			else {
-				letterVector.push_back(letter);
-			}
+	for (char &c : letters) {
+		if (!isalpha(c)) {
+			return false;
 		}
 	}
-	return letterVector;
+	return true;
 }
 
-//Converts a vector of chars into a string
-string join(vector<char> letterVector)
+string readSet()
 {
-	string word = "";
-	for (size_t i = 0; i < letterVector.size(); i++) {
-		word += letterVector[i];
+	string letters;
+	cin >> letters;
+	capitalize(letters);
+
+	if (!validInput(letters)) {
+		cin.clear();
+		cin.ignore(10000, '\n');
+		cout << "Invalid input. Please insert only alphabetic letters" << endl;
+		letters = readSet();
 	}
-	return word;
+
+	return letters;
 }
 
 //returns a vector of strings with all possible combinations of the set of letters in 'letterVector'
-vector<string> possibleConstructions(vector<char> letterVector) {
-	vector<string> possibleConstructionsVector;
-	string word = join(letterVector);
-	capitalize(word);
-	
+vector<string> wordsConstructor(vector<string> wordList, string letters) {
+	vector<string> validWords;
+
 	//STL WAY
-	sort(word.begin(), word.end());
+	sort(letters.begin(), letters.end());
 	do
 	{
-		possibleConstructionsVector.push_back(word);
-	} while (next_permutation(word.begin(), word.end()));
-	
-	return possibleConstructionsVector;
-}
+		if (binary_search(wordList.begin(),wordList.end(),letters))
+			validWords.push_back(letters);
 
-//Checks if the words inside 'wordVector' exist in 'wordList'. If they do then it puts them in a vector and returns it
-vector<string> validWords(vector<string> wordList, vector<string> wordsVector) {
-	vector<string> validWordsVector;
-	string possibleWord;
+	} while (next_permutation(letters.begin(), letters.end()));
 
-	for (size_t i = 0; i < wordsVector.size(); i++) {
-		possibleWord = wordsVector[i];
-		if (searchWithWildcard(wordList, possibleWord)) {
-			validWordsVector.push_back(possibleWord);
-		}
-	}
-	return validWordsVector;
+	return validWords;
 }
 
 //Third game
 void buildWords(vector<string> wordList)
 {
-	vector<char> letterVector = readSet();
-	string letters = join(letterVector);
+	cout << "Please insert a set of letters (Press ENTER to end set): " << endl;
+	string letters = readSet();
 
-	cout << "Building word possibilities..." << endl;
-	vector<string> possibleConstructionsVector = possibleConstructions(letterVector);
+	cout << "Building word possibilities and verifying them..." << endl;
+	vector<string> validWords = wordsConstructor(wordList, letters);
 
-	cout << "Verifying valid words..." << endl;
-	vector<string> validWordsVector = validWords(wordList, possibleConstructionsVector);
-
-	if (validWordsVector.size()) {
+	if (validWords.size()) {
 		cout << "Valid words you can form with the letters " << letters << ": " << endl;
-		showVector(validWordsVector);
+		showVector(validWords);
 	}
 	else {
 		cout << "You can not form any valid word with the letters: " << letters << endl;
@@ -375,7 +344,7 @@ void createSet(vector<string> wordList)
 
 void showMenu(vector<string> wordList)
 {
-	int option = 0;
+	unsigned char option = '0';
 
 	// Should we allow the player to keep playing after an option is selected? If yes, this works.
 	while (true) {
@@ -394,29 +363,29 @@ void showMenu(vector<string> wordList)
 		cin >> option;
 
 		switch (option) {
-		case 1:
+		case '1':
 			checkWordInVector(wordList);
 			cout << endl;
 			break;
 
-		case 2:
+		case '2':
 			guessWord(wordList);
 			cout << endl;
 			break;
-		case 3:
+		case '3':
 			buildWords(wordList);
 			cout << endl;
 			break;
-		case 5:
+		case '5':
 			searchWithWildcard(wordList);
 			cout << endl;
 			break;
 
-		case 6:
+		case '6':
 			exit(0);
 
 		default:
-			cout << "Please insert a valid option" << endl;
+			cout << "Please insert a valid option!" << endl;
 			cin.clear();
 		}
 	}
