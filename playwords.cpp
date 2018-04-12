@@ -57,16 +57,13 @@ void capitalize(string &word)
 {
 	//STL way: transform(word.begin(), word.end(), word.begin(), [] (unsigned char c) { return toupper(c); } );
 
-<<<<<<< HEAD
 	for (char &c : word) {
 		c = static_cast<unsigned char>(toupper(c));
 	}
-=======
     for (char &c : word) {
         c = static_cast<unsigned char>(toupper(c));
     }
 
->>>>>>> b17521f94a1cd27126a3f079956e860d3b4e2207
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -202,13 +199,8 @@ string scramble(vector<char> vector)
 {
 	string newWord;
 
-<<<<<<< HEAD
-	while (vector.size()) {
-		unsigned long index = rand() % vector.size();
-=======
     while (vector.size()) {
         unsigned long index = rand() % vector.size();
->>>>>>> b17521f94a1cd27126a3f079956e860d3b4e2207
 
 		newWord.push_back(vector[index]);
 		vector.erase(vector.begin() + index);
@@ -390,7 +382,6 @@ void createSet(vector<string> wordList)
 
 void showMenu(vector<string> wordList)
 {
-<<<<<<< HEAD
 	int option = 0;
 
 	// Should we allow the player to keep playing after an option is selected? If yes, this works.
@@ -406,49 +397,6 @@ void showMenu(vector<string> wordList)
 		cin >> option;
 
 		switch (option) {
-		case 1:
-			checkWordInVector(wordList);
-			cout << endl;
-			break;
-
-		case 2:
-			guessWord(wordList);
-			cout << endl;
-			break;
-		case 3:
-			buildWords(wordList);
-			cout << endl;
-			break;
-		case 5:
-			searchWithWildcard(wordList);
-			cout << endl;
-			break;
-
-		case 6:
-			exit(0);
-
-		default:
-			cout << "Please insert a valid option" << endl;
-			cin.clear();
-		}
-
-	}
-=======
-    int option = 0;
-
-    // Should we allow the player to keep playing after an option is selected? If yes, this works.
-    while (true) {
-        // The option names will be improved in future versions of this program
-        cout << "1: Check if a word belongs to the word list" << endl;
-        cout << "2: Guess a word" << endl;
-        cout << "3: Build words" << endl;
-        cout << "4: Build Words 2" << endl;
-        cout << "5: Show words with wildcard" << endl;
-        cout << "6: Exit" << endl;
-        cout << "Select an option: " << flush;
-        cin >> option;
-
-        switch (option) {
             case 1:
                 checkWordInVector(wordList);
                 cout << endl;
@@ -458,11 +406,10 @@ void showMenu(vector<string> wordList)
                 guessWord(wordList);
                 cout << endl;
                 break;
-
-            case 4:
-                createSet(wordList);
+            case 3:
+                buildWords(wordList);
+                cout << endl;
                 break;
-
             case 5:
                 searchWithWildcard(wordList);
                 cout << endl;
@@ -471,12 +418,11 @@ void showMenu(vector<string> wordList)
             case 6:
                 exit(0);
 
-            default:
-                cout << "Please insert a valid option" << endl;
-                cin.clear();
-        }
-    }
->>>>>>> b17521f94a1cd27126a3f079956e860d3b4e2207
+		default:
+			cout << "Please insert a valid option" << endl;
+			cin.clear();
+		}
+	}
 }
 
 int main()
