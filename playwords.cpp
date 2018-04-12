@@ -12,6 +12,8 @@ void greetUser(ifstream &input, string &inputFileName, vector<string> &wordList)
 	string greeting = "PLAYING WITH WORDS";
 	string word;
 
+	//Title
+	cout << string(greeting.length(), '=') << endl;
 	cout << greeting << endl;
 	cout << string(greeting.length(), '=') << endl << endl;
 
@@ -35,8 +37,8 @@ void greetUser(ifstream &input, string &inputFileName, vector<string> &wordList)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-//searches in 'wordList' for 'word' and returns its index if 'word' is found
-//if there's more than one 'word' in 'wordList' the function returns the index of the last ocurrency
+//Searches in 'wordList' for 'word' and returns its index if 'word' is found
+//If there's more than one 'word' in 'wordList' the function returns the index of the last ocurrency
 //Uses a Binary Search method
 int searchVector(vector<string> wordList, string word, int left, int right)
 {
@@ -53,20 +55,18 @@ int searchVector(vector<string> wordList, string word, int left, int right)
 	return -1; //if the word does not exist in the wordList vector, the function returns -1
 }
 
+//Takes a string and puts all its character in uppercase
 void capitalize(string &word)
 {
 	//STL way: transform(word.begin(), word.end(), word.begin(), [] (unsigned char c) { return toupper(c); } );
-
 	for (char &c : word) {
 		c = static_cast<unsigned char>(toupper(c));
 	}
-    for (char &c : word) {
-        c = static_cast<unsigned char>(toupper(c));
-    }
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
+//Returns true if 'word' is present in 'wordList'
+//Uses searchVector function to get the index of the word being searched
 bool exists(vector<string> &wordList, string word)
 {
 	bool result = false;
@@ -75,16 +75,21 @@ bool exists(vector<string> &wordList, string word)
 	capitalize(word);
 
 	int pos = searchVector(wordList, word, 0, wordList.size() - 1);
+
 	if (pos != -1) {
 		result = true;
 	}
 	return result;
 }
 
+void showVector(vector<string> wordsVector) {
+	for (size_t i = 0; i < wordsVector.size(); i++) {
+		cout << wordsVector[i] << endl;
+	}
+}
 ///////////////////////////////////////////////////////////////////////////////////
 void checkWordInVector(vector<string> &wordList)
 {
-
 	string word;
 
 	cout << "Insert a word: ";
@@ -172,13 +177,13 @@ void searchWithWildcard(vector<string> vector)
 
 bool searchWithWildcard(vector<string> vector, string word)
 {
-    for (string s : vector) {
-        if (wildcardMatch(s.c_str(), word.c_str())) {
-            return true;
-        }
-    }
+	for (string s : vector) {
+		if (wildcardMatch(s.c_str(), word.c_str())) {
+			return true;
+		}
+	}
 
-    return false;
+	return false;
 }
 
 
@@ -199,8 +204,8 @@ string scramble(vector<char> vector)
 {
 	string newWord;
 
-    while (vector.size()) {
-        unsigned long index = rand() % vector.size();
+	while (vector.size()) {
+		unsigned long index = rand() % vector.size();
 
 		newWord.push_back(vector[index]);
 		vector.erase(vector.begin() + index);
@@ -209,6 +214,7 @@ string scramble(vector<char> vector)
 	return newWord;
 }
 
+//Second Game
 void guessWord(vector<string> wordList)
 {
 	bool won = false;
@@ -220,8 +226,6 @@ void guessWord(vector<string> wordList)
 
 	cout << "Scrambling..." << endl;
 	string scrambledWord = scramble(split(word));
-
-	cout << word << endl;
 
 	while (tries) {
 		cout << "Your word is: " << scrambledWord << endl;
@@ -250,104 +254,61 @@ void guessWord(vector<string> wordList)
 ////////////////////////////////////////////////////////////////////////////
 //GAME: BUILD WORDS
 ////////////////////////////////////////////////////////////////////////////
-//Reads the a set of letters inputed by the user
-vector<char> readSet()
+//Reads a set of letters inputed by the user
+bool validInput(string letters)
 {
-	vector<char> letterVector;
-	char letter;
-	bool anotherLetter = true;
-
-	cout << "Please insert a set of letters, separated by 'space' (Insert '0' to end set): " << endl;
-	while (anotherLetter) {
-		cin >> letter;
-		if (letter == '0') {
-			anotherLetter = false;
-		}
-		else {
-			letterVector.push_back(letter);
+	for (char &c : letters) {
+		if (!isalpha(c)) {
+			return false;
 		}
 	}
-
-	return letterVector;
+	return true;
 }
 
-
-string join(vector<char> letterVector)
+string readSet()
 {
-	string word = "";
-	for (size_t i = 0; i < letterVector.size(); i++) {
-		word += letterVector[i];
-	}
-	return word;
-}
+	string letters;
+	cin >> letters;
+	capitalize(letters);
 
-////////////////////////////////////////////////////////////////////////////
-//swaps two chars in a vector with indexes X and Y
-void swapElements(string &letterVector, int x, int y)
-{
-	char temp = letterVector[x];
-	letterVector[x] = letterVector[y];
-	letterVector[y] = temp;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-//Updated 'wordList' so that each 'word' appears only once
-void removeDuplicates(vector<string> &wordList)
-{
-	wordList.erase(unique(wordList.begin(), wordList.end()), wordList.end());
-}
-
-vector<string> possibleConstructions(vector<char> letterVector) {
-	vector<string> possibleConstructionsVector;
-	string word = join(letterVector);
-	capitalize(word);
-
-	int length = letterVector.size();
-
-	for (int j = 1; j <= length; j++) {
-		for (int i = 0; i < length - 1; i++) {
-			swapElements(word, i, i + 1);
-			possibleConstructionsVector.push_back(word);
-		}
+	if (!validInput(letters)) {
+		cin.clear();
+		cin.ignore(10000, '\n');
+		cout << "Invalid input. Please insert only alphabetic letters" << endl;
+		letters = readSet();
 	}
 
-	removeDuplicates(possibleConstructionsVector);
-	return possibleConstructionsVector;
+	return letters;
 }
 
-vector<string> validWords(vector<string> wordList, vector<string> wordsVector) {
-	vector<string> validWordsVector;
-	string possibleWord;
-	
-	for (size_t i = 0; i < wordsVector.size(); i++) {
-		possibleWord = wordsVector[i];
-		if (exists(wordList, possibleWord)) {
-			validWordsVector.push_back(possibleWord);
-		}
-	}
-	return validWordsVector;
+//returns a vector of strings with all possible combinations of the set of letters in 'letterVector'
+vector<string> wordsConstructor(vector<string> wordList, string letters) {
+	vector<string> validWords;
+
+	//STL WAY
+	sort(letters.begin(), letters.end());
+	do
+	{
+		if (binary_search(wordList.begin(),wordList.end(),letters))
+			validWords.push_back(letters);
+
+	} while (next_permutation(letters.begin(), letters.end()));
+
+	return validWords;
 }
 
+//Third game
 void buildWords(vector<string> wordList)
 {
-	vector<char> letterVector = readSet();
-	string letters = join(letterVector);
+	cout << "Please insert a set of letters (Press ENTER to end set): " << endl;
+	string letters = readSet();
 
-	cout << "Building word possibilities..." << endl;
-	vector<string> possibleConstructionsVector = possibleConstructions(letterVector);
+	cout << "Building word possibilities and verifying them..." << endl;
+	vector<string> validWords = wordsConstructor(wordList, letters);
 
-	for (size_t i = 0; i < possibleConstructionsVector.size(); i++) {
-		cout << possibleConstructionsVector[i] << endl;
-	}
-
-	cout << "Verifying valid words..." << endl;
-	vector<string> validWordsVector = validWords(wordList, possibleConstructionsVector);
-
-	if (validWordsVector.size()) {
+	if (validWords.size()) {
 		cout << "Valid words you can form with the letters " << letters << ": " << endl;
-		for (size_t i = 0; i < validWordsVector.size(); i++) {
-			cout << validWordsVector[i] << endl;
-		}
+		showVector(validWords);
 	}
 	else {
 		cout << "You can not form any valid word with the letters: " << letters << endl;
@@ -356,36 +317,41 @@ void buildWords(vector<string> wordList)
 
 void createSet(vector<string> wordList)
 {
-    vector<char> letterVector;
-    string word;
-    string max_element = *(minmax_element(wordList.begin(), wordList.end()).second);
+	vector<char> letterVector;
+	string word;
+	string max_element = *(minmax_element(wordList.begin(), wordList.end()).second);
 
-    for (int i = 0; i < max_element.length(); ++i) {
-        letterVector.push_back(char(rand() % 25 + 65));
-    }
+	for (int i = 0; i < max_element.length(); ++i) {
+		letterVector.push_back(char(rand() % 25 + 65));
+	}
 
-    for (char c : letterVector) {
-        cout << c;
-    }
+	for (char c : letterVector) {
+		cout << c;
+	}
 
-    cout << endl << "Build a valid word: ";
-    cin >> word;
+	cout << endl << "Build a valid word: ";
+	cin >> word;
 
-    if (searchWithWildcard(wordList, word)) {
-        cout << "Word found" << endl;
+	if (searchWithWildcard(wordList, word)) {
+		cout << "Word found" << endl;
 
-    } else {
-        cout << "Word not found" << endl;
-    }
+	}
+	else {
+		cout << "Word not found" << endl;
+	}
 
 }
 
 void showMenu(vector<string> wordList)
 {
-	int option = 0;
+	unsigned char option = '0';
 
 	// Should we allow the player to keep playing after an option is selected? If yes, this works.
 	while (true) {
+		cout << endl;
+		cout << string(8, '-') << endl;
+		cout << "| MENU |" << endl;
+		cout << string(8, '-') << endl;
 		// The option names will be improved in future versions of this program
 		cout << "1: Check if a word belongs to the word list" << endl;
 		cout << "2: Guess a word" << endl;
@@ -397,29 +363,29 @@ void showMenu(vector<string> wordList)
 		cin >> option;
 
 		switch (option) {
-            case 1:
-                checkWordInVector(wordList);
-                cout << endl;
-                break;
+		case '1':
+			checkWordInVector(wordList);
+			cout << endl;
+			break;
 
-            case 2:
-                guessWord(wordList);
-                cout << endl;
-                break;
-            case 3:
-                buildWords(wordList);
-                cout << endl;
-                break;
-            case 5:
-                searchWithWildcard(wordList);
-                cout << endl;
-                break;
+		case '2':
+			guessWord(wordList);
+			cout << endl;
+			break;
+		case '3':
+			buildWords(wordList);
+			cout << endl;
+			break;
+		case '5':
+			searchWithWildcard(wordList);
+			cout << endl;
+			break;
 
-            case 6:
-                exit(0);
+		case '6':
+			exit(0);
 
 		default:
-			cout << "Please insert a valid option" << endl;
+			cout << "Please insert a valid option!" << endl;
 			cin.clear();
 		}
 	}
