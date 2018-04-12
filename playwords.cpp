@@ -384,10 +384,17 @@ void showMenu(vector<string> wordList)
 			guessWord(wordList);
 			cout << endl;
 			break;
+
+		case '4':
+			createSet(wordList);
+			cout << endl;
+			break;
+
 		case '3':
 			buildWords(wordList);
 			cout << endl;
 			break;
+
 		case '5':
 			searchWithWildcard(wordList);
 			cout << endl;
