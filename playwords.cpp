@@ -374,7 +374,7 @@ void createSet(vector<string> wordList)
     //                                    return s1.length() < s2.length(); }));
     static string longestWord = getLongestWord(wordList);
 	unsigned long stringLength = rand() % longestWord.length();
-    cout << longestWord << endl;
+	
 	letterVector.push_back(firstLetter);
 	letterVector.push_back(firstLetter);
 
