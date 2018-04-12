@@ -204,7 +204,7 @@ string scramble(vector<char> vector)
 {
 	string newWord;
 
-	while (vector.size()) {
+	while (!vector.empty()) {
 		unsigned long index = rand() % vector.size();
 
 		newWord.push_back(vector[index]);
@@ -315,31 +315,86 @@ void buildWords(vector<string> wordList)
 	}
 }
 
-void createSet(vector<string> wordList)
+// Calculates the total number of ocurrences of all letters in the wordList
+vector<int> getOcurrences(vector<string> wordList)
 {
-	vector<char> letterVector;
-	string word;
-	string max_element = *(minmax_element(wordList.begin(), wordList.end()).second);
+	vector<int> ocurrences(26);
 
-	for (int i = 0; i < max_element.length(); ++i) {
-		letterVector.push_back(char(rand() % 25 + 65));
+	for (int i : ocurrences)
+		i = 0;
+
+	for (string s : wordList) {
+		for (char c : s) {
+			++ocurrences[c - 65];
+		}
 	}
 
-	for (char c : letterVector) {
+	return ocurrences;
+}
+
+string getLongestWord(vector<string> wordList)
+{
+    string max = wordList[0];
+
+    for (int i = 1; i < wordList.size(); ++i) {
+        if (wordList[i].length() > max.length())
+            max = wordList[i];
+    }
+
+    return max;
+}
+
+void createSet(vector<string> wordList)
+{
+	// Initialization
+	vector<char> letterVector;
+	static vector<int> ocurrences = getOcurrences(wordList);
+	int offset = rand() % 26 + 65; // Pick a random letter
+	auto firstLetter = char(offset);
+
+	string word;
+    // Use in STL-version
+	// max_element has the following prototype: ForwardIt max_element( ForwardIt first, ForwardIt last, Compare comp );
+    // If no argument of type compare is given, max_element will compare with a function that compares strings (in this case)
+    // and checks which is the "greatest". However, we want to change max_element to return the longest word, not the greatest
+    // which requires us to implement our own Compare function.
+    // static string longestWord = *(max_element(wordList.begin(), wordList.end(), [] (const string& s1, const string& s2) {
+    //                                    return s1.length() < s2.length(); }));
+    static string longestWord = getLongestWord(wordList);
+	unsigned long stringLength = rand() % longestWord.length();
+    cout << longestWord << endl;
+	letterVector.push_back(firstLetter);
+	letterVector.push_back(firstLetter);
+
+	for (int i = 0; i < stringLength; ++i) {
+		auto letter = rand() % 26;
+
+		if (letter == (offset - 65)) continue; // Checks if the random letter is the first letter, continues if it is, to keep the set as random as possible
+
+        int numberOfWordsAdded = ocurrences[letter] /  ocurrences[offset - 65];
+        i += numberOfWordsAdded;
+
+		for (; numberOfWordsAdded > 0; --numberOfWordsAdded) {
+            letterVector.push_back(char(letter + 65));
+        }
+	}
+
+	word = scramble(letterVector);
+
+	cout << "Your set of letters: ";
+	for (char c : word) {
 		cout << c;
 	}
 
-	cout << endl << "Build a valid word: ";
+	cout << endl << "Build a valid with some or all letters: ";
 	cin >> word;
 
-	if (searchWithWildcard(wordList, word)) {
-		cout << "Word found" << endl;
-
-	}
-	else {
-		cout << "Word not found" << endl;
-	}
-
+	searchWithWildcard(wordList, word) ? cout << "Word found" : cout << "Word not found";
+//	if (searchWithWildcard(wordList, word)) {
+//		cout << "Word found";
+//	} else {
+//		cout << "Word not found";
+//	}
 }
 
 void showMenu(vector<string> wordList)
@@ -356,7 +411,7 @@ void showMenu(vector<string> wordList)
 		cout << "1: Check if a word belongs to the word list" << endl;
 		cout << "2: Guess a word" << endl;
 		cout << "3: Build words" << endl;
-		cout << "4: Build Words 2" << endl;
+		cout << "4: Build Words from set" << endl;
 		cout << "5: Show words with wildcard" << endl;
 		cout << "6: Exit" << endl;
 		cout << "Select an option: " << flush;
