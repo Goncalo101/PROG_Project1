@@ -373,7 +373,7 @@ void showMenu(vector<string> wordList)
 			cout << endl;
 			break;
 
-		case 4:
+		case '4':
 			createSet(wordList);
 			cout << endl;
 			break;
