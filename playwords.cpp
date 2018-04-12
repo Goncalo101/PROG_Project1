@@ -37,49 +37,30 @@ void greetUser(ifstream &input, string &inputFileName, vector<string> &wordList)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-//Searches in 'wordList' for 'word' and returns its index if 'word' is found
-//If there's more than one 'word' in 'wordList' the function returns the index of the last ocurrency
+//Searches in 'wordList' for 'word' and returns true if 'word' is found
 //Uses a Binary Search method
-int searchVector(vector<string> wordList, string word, int left, int right)
+bool searchVector(vector<string> wordList, string word, int left, int right)
 {
 	if (left <= right) {
 		int posMid = left + (right - left) / 2;
 		string mid = wordList[posMid];
 		if (word == mid)
-			return posMid;
+			return true;
 		if (word < mid)
 			return searchVector(wordList, word, left, posMid - 1);
 		if (word > mid)
 			return searchVector(wordList, word, posMid + 1, right);
 	}
-	return -1; //if the word does not exist in the wordList vector, the function returns -1
+	return false; //if the word does not exist in the wordList vector, the function returns false
 }
 
-//Takes a string and puts all its character in uppercase
+//Takes a string and puts all its characters in uppercase
 void capitalize(string &word)
 {
 	//STL way: transform(word.begin(), word.end(), word.begin(), [] (unsigned char c) { return toupper(c); } );
 	for (char &c : word) {
 		c = static_cast<unsigned char>(toupper(c));
 	}
-}
-
-///////////////////////////////////////////////////////////////////////////////////
-//Returns true if 'word' is present in 'wordList'
-//Uses searchVector function to get the index of the word being searched
-bool exists(vector<string> &wordList, string word)
-{
-	bool result = false;
-
-	// Program needs to be case insensitive so, make sure that the word is capitalized before searching for it
-	capitalize(word);
-
-	int pos = searchVector(wordList, word, 0, wordList.size() - 1);
-
-	if (pos != -1) {
-		result = true;
-	}
-	return result;
 }
 
 void showVector(vector<string> wordsVector) {
@@ -95,10 +76,11 @@ void checkWordInVector(vector<string> &wordList)
 	cout << "Insert a word: ";
 	cin >> word;
 
-	cout << "Searching for " << word << endl;
-	bool valueExists = exists(wordList, word);
+	capitalize(word);
 
-	if (valueExists) {
+	cout << "Searching for " << word << endl;
+
+	if (searchVector(wordList, word, 0, wordList.size() - 1)) {
 		cout << "The word " << word << " belongs to the Word List" << endl;
 	}
 	else {
@@ -281,19 +263,49 @@ string readSet()
 	return letters;
 }
 
-//returns a vector of strings with all possible combinations of the set of letters in 'letterVector'
+//Searches for 'letter' in 'word'. If found, returns its index. Otherwise, returns '-1'
+size_t searchWord(string word, char letter) {
+	for (size_t i = 0; i < word.length(); i++) {
+		if (word[i] == letter) { return i; }
+	}
+	return -1;
+}
+
+//Returns true if 'currentWord' and 'letters' match. 
+//This occurs if both strings have the same number of characters and the same characters but distributed diferently thorugh out the string
+bool wordMatch(string currentWord, string letters) {
+	int len = letters.length();
+	size_t pos;
+
+	if (currentWord.length() == len) {
+		while (letters.length()) {
+			pos = searchWord(currentWord,letters[0]);
+			if (pos == -1) {
+				return false;
+			}
+			else {
+				letters.erase(letters.begin());
+				currentWord.erase(currentWord.begin() + pos);
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+//returns a vector of strings with all valid words possible to form with 'letters'
 vector<string> wordsConstructor(vector<string> wordList, string letters) {
 	vector<string> validWords;
+	string currentWord;
+	char currentLetter;
 
-	//STL WAY
-	sort(letters.begin(), letters.end());
-	do
-	{
-		if (binary_search(wordList.begin(),wordList.end(),letters))
-			validWords.push_back(letters);
-
-	} while (next_permutation(letters.begin(), letters.end()));
-
+	for (size_t i = 0; i < wordList.size(); i++) {
+		currentWord = wordList[i];
+		
+		if (wordMatch(currentWord, letters)) {
+			validWords.push_back(currentWord);
+		}
+	}
 	return validWords;
 }
 
