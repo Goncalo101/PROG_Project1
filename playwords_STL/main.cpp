@@ -362,12 +362,13 @@ void showMenu(vector<string> wordList)
 		cout << "| MENU |" << endl;
 		cout << string(8, '-') << endl;
 		// The option names will be improved in future versions of this program
-		cout << "1: Check if a word belongs to the word list" << endl;
-		cout << "2: Guess a word" << endl;
-		cout << "3: Build words" << endl;
-		cout << "4: Build Words from set" << endl;
-		cout << "5: Show words with wildcard" << endl;
+		cout << "1: Check Word" << endl;
+		cout << "2: Guess Word" << endl;
+		cout << "3: Possible Words" << endl;
+		cout << "4: Build Words" << endl;
+		cout << "5: Wildcard Game" << endl;
 		cout << "6: Exit" << endl;
+		cout << "i: More information about each game" << endl;
 		cout << "Select an option: " << flush;
 		cin >> option;
 
@@ -399,6 +400,13 @@ void showMenu(vector<string> wordList)
 
 		case '6':
 			exit(0);
+		case 'i':
+			cout << "Check Word - Insert a word and check if it belongs to the dictionary word list." << endl;
+			cout << "Guess Word - Receive a random scrambled word and try to guess wich word it is. You have three tries!" << endl;
+			cout << "Possible Words - Insert a set of letters and see what words are possible to form with that set, if any." << endl;
+			cout << "Build Words - Receive a set of letters and build words using all or some of the letters and check if your word exists." << endl;
+			cout << "Wildcard Game - Insert a word with one or more wildcards characters ('*' or '?') and see all the valid words that match your word." << endl;
+			cout << "Rules: '*' matches with zero or more instances of any characters, '?' matches with one character." << endl;
 
 		default:
 			cerr << endl << "Please insert a valid option!" << endl;
