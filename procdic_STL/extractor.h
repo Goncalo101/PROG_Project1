@@ -5,6 +5,7 @@
 #include <iostream>
 #include <set>
 #include <fstream>
+#include <string>
 
 using namespace std;
 

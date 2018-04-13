@@ -1,13 +1,14 @@
 #include <fstream>
+#include "extractor.h"
 #include "stringManip.h"
 
 using namespace std;
 
 void greetUser(ifstream &input, ofstream &output, string &inputFileName, string &outputFileName)
 {
-    string greeting = "EXTRACTION OF WORD LIST FROM DICTIONARY";
+   string greeting = "EXTRACTION OF WORD LIST FROM DICTIONARY";
 
-    cout << greeting << endl;
+   cout << greeting << endl;
     cout << string(greeting.length(), '=') << endl << endl;
 
     cout << "Insert dictionary input name: ";
@@ -74,6 +75,6 @@ set<string> extractWords(ifstream &input, ofstream &output, const string &fileNa
 void writeEntries(const set<string> &wordSet, ofstream &outfile)
 {
     for (const auto &it : wordSet) {
-        outfile << (string) it << endl;
+       outfile << (string) it << endl;
     }
 }
