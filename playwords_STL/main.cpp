@@ -104,7 +104,7 @@ bool wildcardMatch(const char *str, const char *strWild)
 				return true;
 			// 2. Chance we eat the next character and try it again,
 			// with a wildcard * match. This is done by recursion.
-			// Because we eat one character from the string,
+			// Because we eat one character from the string,size
 			// the recursion will stop.
 			if (*str && wildcardMatch(str + 1, strWild))
 				return true;
@@ -314,7 +314,7 @@ void createSet(vector<string> wordList)
 	string word;
 
 	static string longestWord = getLongestWord(wordList);
-	unsigned long stringLength = longestWord.length();
+	unsigned long stringLength = longestWord.length() + 10;
 
 	letterSet.push_back(firstLetter);
 	letterSet.push_back(firstLetter);
@@ -401,8 +401,9 @@ void showMenu(vector<string> wordList)
 			exit(0);
 
 		default:
-			cout << "Please insert a valid option!" << endl;
+			cerr << endl << "Please insert a valid option!" << endl;
 			cin.clear();
+			cin.ignore(1000, '\n');
 		}
 	}
 }
