@@ -17,7 +17,7 @@ int main()
     // Ending sequence
     cout << endl << "Number of simple words = " << wordSet.size() << endl;
 
-    cout << "Saving words to " << outputFileName << " ..." << endl;
+	cout << "Saving words to " << outputFileName << " ..." << endl;
     writeEntries(wordSet, outfile);
 
     cout << "Done" << endl;
