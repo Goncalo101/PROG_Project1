@@ -1,7 +1,3 @@
-//
-// Created by goncalo on 13/04/18.
-//
-
 #ifndef PROG_PROJECT1_GAME_H
 #define PROG_PROJECT1_GAME_H
 
