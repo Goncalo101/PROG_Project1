@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <ctime>
+#include "Game.h"
 
 using namespace std;
 
