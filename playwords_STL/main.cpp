@@ -221,7 +221,7 @@ string readSet()
 //Returns true if 'currentWord' and 'letters' match. 
 //This occurs if both strings have the same number of characters and the same characters but distributed diferently thorugh out the string
 bool wordMatch(string currentWord, string letters) {
-	int len = letters.length();
+	size_t len = letters.length();
 	size_t pos;
 
 	if (currentWord.length() == len) {
@@ -244,7 +244,6 @@ bool wordMatch(string currentWord, string letters) {
 vector<string> wordsConstructor(vector<string> wordList, string letters) {
 	vector<string> validWords;
 	string currentWord;
-	char currentLetter;
 
 	for (size_t i = 0; i < wordList.size(); i++) {
 		currentWord = wordList[i];
@@ -265,7 +264,7 @@ void buildWords(vector<string> wordList)
 	cout << "Building word possibilities and verifying them..." << endl;
 	vector<string> validWords = wordsConstructor(wordList, letters);
 
-	if (validWords.size()) {
+	if (!validWords.empty()) {
 		cout << "Valid words you can form with the letters " << letters << ": " << endl;
 		showVector(validWords);
 	}
@@ -279,6 +278,7 @@ vector<int> getOcurrences(vector<string> wordList)
 {
 	vector<int> ocurrences(26);
 
+	// Make sure the vector is initialized
 	for (int i : ocurrences)
 		i = 0;
 
@@ -295,7 +295,7 @@ string getLongestWord(vector<string> wordList)
 {
 	string max = wordList[0];
 
-	for (int i = 1; i < wordList.size(); ++i) {
+	for (size_t i = 1; i < wordList.size(); ++i) {
 		if (wordList[i].length() > max.length())
 			max = wordList[i];
 	}
@@ -306,7 +306,7 @@ string getLongestWord(vector<string> wordList)
 void createSet(vector<string> wordList)
 {
 	// Initialization
-	string letterVector;
+	string letterSet;
 	static vector<int> ocurrences = getOcurrences(wordList);
 	int offset = rand() % 26 + 65; // Pick a random letter
 	auto firstLetter = char(offset);
@@ -314,25 +314,31 @@ void createSet(vector<string> wordList)
 	string word;
 
 	static string longestWord = getLongestWord(wordList);
-	unsigned long stringLength = rand() % longestWord.length();
+	unsigned long stringLength = longestWord.length();
 
-	letterVector.push_back(firstLetter);
-	letterVector.push_back(firstLetter);
+	letterSet.push_back(firstLetter);
+	letterSet.push_back(firstLetter);
 
-	for (int i = 0; i < stringLength; ++i) {
+	for (size_t i = 0; i < stringLength; ++i) {
 		auto letter = rand() % 26;
 
 		if (letter == (offset - 65)) continue; // Checks if the random letter is the first letter, continues if it is, to keep the set as random as possible
 
 		int numberOfWordsAdded = ocurrences[letter] / ocurrences[offset - 65];
+
+		if (numberOfWordsAdded > 2) {
+		    numberOfWordsAdded = 2;
+		}
+
 		i += numberOfWordsAdded;
 
-		for (; numberOfWordsAdded > 0; --numberOfWordsAdded) {
-			letterVector.push_back(char(letter + 65));
+		while (numberOfWordsAdded > 0)  {
+			letterSet.push_back(char(letter + 65));
+			--numberOfWordsAdded;
 		}
 	}
 
-	word = scramble(letterVector);
+	word = scramble(letterSet);
 
 	cout << "Your set of letters: ";
 	for (char c : word) {
